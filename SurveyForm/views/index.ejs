@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Survey Form</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        var socket = io.connect();
+        $("form").submit(function(){
+            var f = $("form").serialize();
+            socket.emit("posting_form", f);
+            return false;
+        });
+
+        socket.on("updated_message", function(r){
+            $("#res").html("<strong>" + JSON.stringify(r) +  "</strong>");
+        });
+        socket.on("random_number", function(num){
+            $("#num").html("<strong>" + num.num +  "</strong>");
+        });
+    });
+    
+    
+    
+    
+    
+    </script>
+</head>
+
+<body>
+    <div><p>You emitted the following information to the server: <span id="res"></span></p></div>
+    <div><p>Your lucky number emitted by the server: <span id="num"></span></p></div>
+    <div id="form">
+        <form action="/result" method="post">
+            <label for="name">Your Name:</label>
+            <input type="text" name="name" value="Vitalie Braga">
+            <label for="loc">Dojo Location:</label>
+            <select name="loc">
+                        <option value="Seatle">Seattle</option>
+                        <option value="Silicon Valey">Silicon Valey</option>
+                        <option value="Chicago">Chicago</option>
+                        <option value="Dallas">Dallas</option>
+                        <option value="Los Angeles">Los Angeles</option>
+                        <option value="Washington DC">Washington DC</option>
+                        <option value="Tulsa">Tulsa</option>
+                    </select>
+            <label for="lang">Favorite Language:</label>
+            <select name="lang">
+                        <option value="Python">Python</option>
+                        <option value="JavaScript">JavaScript</option>
+                        <option value="MEAN">MEAN</option>
+                        <option value="C#">C#</option>
+                        <option value="Ruby">Ruby</option>
+                    </select>
+            <label for="com" id="com">Comment (optional)</label>
+            <textarea name="com" id="" cols="" rows="10">Testing Sockets</textarea>
+            <input type="submit" id="button" value="Submit">
+        </form>
+    </div>
+</body>
+
+</html>

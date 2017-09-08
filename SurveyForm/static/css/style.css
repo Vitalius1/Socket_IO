@@ -1,0 +1,43 @@
+#form {
+    width: 30%;
+    height: auto;
+    margin: 20px auto;
+    border: 3px solid black;
+}
+
+form {
+    width: 95%;
+    height: auto;
+    margin: 3%;
+    font-size: 1.1em;
+}
+
+label{
+    display: inline-block;
+    width: 45%;
+    margin: 5px 0;
+    vertical-align: top;
+}
+
+input{
+    display: inline-block;
+    width: 50%;
+    margin: 5px 0;
+}
+select {
+    display: inline-block;
+    width: 50%
+}
+#button {
+    display: block;
+    margin-left: 87%;
+    width: auto;
+    color: white;
+    background: lightblue;
+}
+ #com {
+     display: block;
+ }
+ textarea {
+     width: 97%;
+ }
