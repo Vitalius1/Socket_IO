@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Group Chat</title>
+    <style>
+        #container{width:500px;height:500px}
+        #chat{width:100%;height:300px;border:2px solid red;overflow:scroll}
+        #text{width:100%;font-size:26px}
+        #button{float:right;color:whitesmoke;background-color:darkolivegreen;font-size:26px}
+        #main{width:505px;margin:10px auto}
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script>
+        
+        function updateScroll(){
+            var element = document.getElementById("chat");
+            element.scrollTop = element.scrollHeight;
+        }
+        var name;
+        function getName(){
+            name = prompt("Your Name:");
+            if(name.length == 0){
+                getName();
+            }
+        };
+        getName();
+        
+        $(document).ready(function(){
+            var socket = io.connect();
+            socket.emit("check_if_user_exist", {name:name});
+
+            socket.on("allready_exists", function(){
+                if(!alert("User with this name already exists. Choose another name please.")){
+                    window.location.reload();
+                };
+                
+            });
+            
+            $("form").submit(function(){
+                var m = $("form").serialize();
+                socket.emit("posting_message", m);
+                this.reset();
+                return false;
+            });
+
+            socket.on("get_messages", function(data){
+                for(let x of data.allMessages){
+                    $("#chat").append(`<p>${x.creator}: ${x.content}</p>`);
+                    updateScroll();
+                }
+            });
+            
+            socket.on("new_message", function(data){
+                $("#chat").append(`<p>${data.creator}: ${data.content}</p>`);
+                if(data.id == socket.id){
+                    updateScroll();
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="main">
+        <h1><u>Conversation Board</u></h1>
+        <div id="container">
+            <div id="chat"></div><br><br>
+            <form>
+                <input type="text" name="msg" placeholder="enter your message here" id="text"><br><br>
+                <input type="submit" value="Send" id="button">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
